@@ -303,12 +303,12 @@ Vector2D Vector2D::Sum(std::vector<Vector2D> vectors)
     {
         Vector2D t = sum + vectors[i];
 
-        if(std::abs(sum.X) >= vectors[i].X)
+        if(std::abs(sum.X) >= std::abs(vectors[i].X))
             c.X += (sum.X - t.X) + vectors[i].X;
         else
             c.X += (vectors[i].X - t.X) + sum.X;
 
-        if(std::abs(sum.Y) >= vectors[i].Y)
+        if(std::abs(sum.Y) >= std::abs(vectors[i].Y))
             c.Y += (sum.Y - t.Y) + vectors[i].Y;
         else
             c.Y += (vectors[i].Y - t.Y) + sum.Y;
