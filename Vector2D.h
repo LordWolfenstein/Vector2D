@@ -1,16 +1,17 @@
-/* Vector2D.h 
+/* Vector2D.h
 
 An attempt to re-create Microsoft.Xna.Framework.Vector2 from C# in C++
 
 Copyright (C) 2018 Lord Wolfenstein
 
 */
-
+#pragma once
 #ifndef LORD_WOLFENSTEIN_MICROSOFT_XNA_VECTOR_2D
 #define LORD_WOLFENSTEIN_MICROSOFT_XNA_VECTOR_2D
 
 //#define _USE_MATH_DEFINES
-//#include <iostream>
+#include <iostream>
+#include <vector>
 //#include <cmath>
 
 class Vector2D
@@ -20,13 +21,12 @@ private:
 protected:
 public:
 
-    //friend std::ostream& operator<<(std::ostream& os, Vector2D vector2D);
+    friend std::ostream& operator<<(std::ostream& os, Vector2D vector2D);
     static double Angle( Vector2D V1, Vector2D V2);
-    
+
     double X;
     double Y;
     Vector2D(void);
-    Vector2D(double value);
     Vector2D(double x, double y);
     Vector2D(const Vector2D &vector2D);
 
@@ -60,8 +60,6 @@ public:
     Vector2D& operator-=(double scalar);
     Vector2D operator-(void);
 
-    //Vector2D operator*(Vector2D vector2D);
-    //Vector2D& operator*=(Vector2D vector2D);
     Vector2D operator*(double scalar);
     Vector2D& operator*=(double scalar);
 
@@ -74,7 +72,7 @@ public:
     bool operator>(Vector2D &vector2D);
 
     bool Equals(const Vector2D &vector2D);
-    //std::string ToString(void);
+    static Vector2D Sum(std::vector<Vector2D> vectors);
 
     ~Vector2D(void);
 };
