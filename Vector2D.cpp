@@ -11,11 +11,11 @@ Copyright (C) 2018 Lord Wolfenstein
 #include "Vector2D.h"
 
 // For lazy printing
-//std::ostream& operator<<(std::ostream& os, Vector2D vector2D)
-//{
-//    os << "X = " << vector2D.X << ", Y = " << vector2D.Y << ", angle = " << vector2D.Angle() << ", length = " << vector2D.Length();
-//    return os;
-//}
+std::ostream& operator<<(std::ostream& os, Vector2D vector2D)
+{
+    os << "X = " << vector2D.X << ", Y = " << vector2D.Y << ", length = " << vector2D.Length();
+    return os;
+}
 
 // Returns the angle between two vectors
 double Vector2D::Angle(Vector2D V1, Vector2D V2)
@@ -28,12 +28,6 @@ Vector2D::Vector2D(void)
 {
     X = 0;
     Y = 0;
-}
-
-// Initiates both X and Y components to the value
-Vector2D::Vector2D(double value)
-{
-    X = Y = value;
 }
 
 // Initiates the vector to the value
@@ -53,7 +47,7 @@ Vector2D::Vector2D(const Vector2D &vector2D)
 // This does nothing
 Vector2D::~Vector2D(void)
 {
-    
+
 }
 
 void Vector2D::Set(double x, double y)
@@ -298,9 +292,27 @@ bool Vector2D::Equals(const Vector2D &vector2D)
     return this == &vector2D;
 }
 
-//std::string Vector2D::ToString(void)
-//{
-//    std::stringstream ss;
-//    ss << "X=" << X << ", Y=" << Y << ", Angle = " << Angle() << ", Length = " << Length();
-//    return ss.str();
-//}
+// Return the sum of a vector of Vector2D:S with float error corrections.
+// See: https://en.wikipedia.org/wiki/Kahan_summation_algorithm#Further_enhancements
+Vector2D Vector2D::Sum(std::vector<Vector2D> vectors)
+{
+    Vector2D sum = vectors[0];
+    Vector2D c;
+
+    for(int i = 1; i < vectors.size(); i++)
+    {
+        Vector2D t = sum + vectors[i];
+
+        if(std::abs(sum.X) >= vectors[i].X)
+            c.X += (sum.X - t.X) + vectors[i].X;
+        else
+            c.X += (vectors[i].X - t.X) + sum.X;
+
+        if(std::abs(sum.Y) >= vectors[i].Y)
+            c.Y += (sum.Y - t.Y) + vectors[i].Y;
+        else
+            c.Y += (vectors[i].Y - t.Y) + sum.Y;
+    }
+
+    return sum + c;
+}
