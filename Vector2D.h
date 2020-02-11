@@ -80,7 +80,6 @@ public:
     double Angle(Vector2D vector2D);
 
     // Rotates with the angle preserving the magnitude
-    // angle: radians I assume...
     void Rotate(double angle);
 
     // Sets the given angle preserving the magnitude
