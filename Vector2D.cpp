@@ -10,41 +10,63 @@ Copyright (C) 2018 Lord Wolfenstein
 #include <cmath>
 #include "Vector2D.h"
 
-// For lazy printing
 std::ostream& operator<<(std::ostream& os, Vector2D vector2D)
 {
-    os << "X = " << vector2D.X << ", Y = " << vector2D.Y << ", length = " << vector2D.Length();
+    os << "X = " << vector2D.x << ", Y = " << vector2D.y << ", length = " << vector2D.Length();
     return os;
 }
 
-// Returns the angle between two vectors
+const double Vector2D::PI = 3.14159265358979323846;
+
 double Vector2D::Angle(Vector2D V1, Vector2D V2)
 {
     return V1.Angle(V2);
 }
 
-// Initiates both X and Y components to 0
 Vector2D::Vector2D(void)
 {
-    X = 0;
-    Y = 0;
+    x = 0;
+    y = 0;
 }
 
-// Initiates the vector to the value
+Vector2D::Vector2D(int x, int y)
+{
+    this->x = (double)x;
+    this->y = (double)y;
+}
+
+
+Vector2D::Vector2D(int x, double y)
+{
+    this->x = (double)x;
+    this->y = y;
+}
+
+Vector2D::Vector2D(double x, int y)
+{
+    this->x = x;
+    this->y = (double)y;
+}
+
 Vector2D::Vector2D(double x, double y)
 {
-    X = x;
-    Y = y;
+    this->x = x;
+    this->y = y;
 }
 
-// Copy constructor
 Vector2D::Vector2D(const Vector2D &vector2D)
 {
-    X = vector2D.X;
-    Y = vector2D.Y;
+    x = vector2D.x;
+    y = vector2D.y;
 }
 
-// This does nothing
+Vector2D::Vector2D(const SDL_Point &point)
+{
+    x = point.x;
+    y = point.y;
+}
+
+
 Vector2D::~Vector2D(void)
 {
 
@@ -52,237 +74,225 @@ Vector2D::~Vector2D(void)
 
 void Vector2D::Set(double x, double y)
 {
-    X = x;
-    Y = y;
+    this->x = x;
+    this->y = y;
 }
 
-// Returns the length of the vector
 double Vector2D::Length(void)
 {
-    return std::sqrt(X*X + Y*Y);
-}
-
-// Sets the length and preserves angle
-void Vector2D::Length(double length)
-{
-    double angle = Angle();
-    X = length * cos(angle);
-    Y = length * sin(angle);
-}
-
-// Returns the length difference between the vectors
-double Vector2D::Length(Vector2D vector2D)
-{
-    return abs(Length() - Length());
-}
-
-// Returns the distance between the vectors
-double Vector2D::Distance(Vector2D vector2D)
-{
-    double x = X - vector2D.X;
-    double y = Y - vector2D.Y;
     return std::sqrt(x*x + y*y);
 }
 
-// Return the unit vector of the vector
+void Vector2D::SetLength(double length)
+{
+    double angle = Angle();
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
+}
+
+double Vector2D::Length(Vector2D vector2D)
+{
+    return std::abs(Length() - Length());
+}
+
+
+double Vector2D::Distance(Vector2D vector2D)
+{
+    double X = x - vector2D.x;
+    double Y = y - vector2D.y;
+    return std::sqrt(X*X + Y*Y);
+}
+
+Vector2D Vector2D::To(Vector2D vector2D)
+{
+    return vector2D - *this;
+}
+
+Vector2D Vector2D::Direction(Vector2D vector2D)
+{
+    return To(vector2D).Unit();
+}
+
 Vector2D Vector2D::Unit(void)
 {
     double length = Length();
-    return length != 0 ? Vector2D(X / length, Y / length) : Vector2D(0, 0); // if Length()==0 then return a zero vector
+    return length != 0 ? Vector2D(x / length, y / length) : Vector2D(0, 0); // if Length()==0 then return a zero vector
 }
 
-// Normalizes the vector to its unit vector
 void Vector2D::Normalize(void)
 {
     double length = Length();
     if (length != 0)
     {
-        X /= length;
-        Y /= length;
+        x /= length;
+        y /= length;
     }
 }
 
-// Returns angle in radians (-PI to PI)
 double Vector2D::Angle(void)
 {
-    return std::atan2(Y, X);
+    return std::atan2(y, x);
 }
 
-// As Angle() but in degrees
 double Vector2D::Degrees(void)
 {
     return Angle() * 180 / PI;
 }
 
-// Returns the angle between the vectors
 double Vector2D::Angle(Vector2D vector2D)
 {
     return std::atan2(Det(vector2D), Dot(vector2D));
 }
 
-// Sets the given angle preserving the magnitude
 void Vector2D::Angle(double angle)
 {
     double length = Length();
-    X = length * cos(angle);
-    Y = length * sin(angle);
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
 }
 
-// Rotates with the angle preserving the magnitude
 void Vector2D::Rotate(double angle)
 {
     double length = Length();
     double oldAngle = Angle();
-    X = length * cos(oldAngle + angle);
-    Y = length * sin(oldAngle + angle);
+    x = length * std::cos(oldAngle + angle);
+    y = length * std::sin(oldAngle + angle);
 }
 
-// A.K.A. Scalar product
 double Vector2D::Dot(Vector2D vector2D)
 {
-    return X*vector2D.X + Y*vector2D.Y;
+    return x*vector2D.x + y*vector2D.y;
 }
 
-// Determinant
+
 double Vector2D::Det(Vector2D vector2D)
 {
-    return X*vector2D.Y - Y*vector2D.X;
+    return x*vector2D.y - y*vector2D.x;
 }
-
-// Operator overloading.
 
 Vector2D& Vector2D::operator=(Vector2D vector2D)
 {
-    X = vector2D.X;
-    Y = vector2D.Y;
+    x = vector2D.x;
+    y = vector2D.y;
 
     return *this;
 }
 
-// Adds two vectors
 Vector2D Vector2D::operator+(Vector2D vector2D)
 {
-    return Vector2D(X + vector2D.X, Y + vector2D.Y);
+    return Vector2D(x + vector2D.x, y + vector2D.y);
 }
 
-// Adds one vector to the other
 Vector2D& Vector2D::operator+=(Vector2D vector2D)
 {
-    X += vector2D.X;
-    Y += vector2D.Y;
+    x += vector2D.x;
+    y += vector2D.y;
     return *this;
 }
 
-// Adds a value to the the length of the vector
 Vector2D Vector2D::operator+(double scalar)
 {
     double length = Length() + scalar;
     double angle = Angle();
-    return Vector2D(length * cos(angle), length * sin(angle));
+    return Vector2D(length * std::cos(angle), length * std::sin(angle));
 }
 
-// Adds a value to the the length of the vector
 Vector2D& Vector2D::operator+=(double scalar)
 {
     double length = Length() + scalar;
     double angle = Angle();
-    X = length * cos(angle);
-    Y = length * sin(angle);
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
     return *this;
 }
 
-// Subtracts two vectors
 Vector2D Vector2D::operator-(Vector2D vector2D)
 {
-    return Vector2D(X - vector2D.X, Y - vector2D.Y);
+    return Vector2D(x - vector2D.x, y - vector2D.y);
 }
 
-// Subtracts one vector from the other
+
 Vector2D& Vector2D::operator-=(Vector2D vector2D)
 {
-    X -= vector2D.X;
-    Y -= vector2D.Y;
+    x -= vector2D.x;
+    y -= vector2D.y;
     return *this;
 }
 
-// Substrates a scalar value from a vector
 Vector2D Vector2D::operator-(double scalar)
 {
     double length = Length() - scalar;
     double angle = Angle();
-    return Vector2D(length * cos(angle), length * sin(angle));
+    return Vector2D(length * std::cos(angle), length * std::sin(angle));
 }
 
-// Substrates a scalar value from a vector
 Vector2D& Vector2D::operator-=(double scalar)
 {
     double length = Length() - scalar;
     double angle = Angle();
-    X = length * cos(angle);
-    Y = length * sin(angle);
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
     return *this;
 }
 
-// returns the negative vector
 Vector2D Vector2D::operator-(void)
 {
-    return Vector2D(-X, -Y);
+    return Vector2D(-x, -y);
 }
 
-// Multiplies the length of the vector by a scalar
 Vector2D Vector2D::operator*(double scalar)
 {
     double length = Length() * scalar;
     double angle = Angle();
-    return Vector2D(length * cos(angle), length * sin(angle));
+    return Vector2D(length * std::cos(angle), length * std::sin(angle));
 }
 
-// Multiplies the length of the vector by a scalar
 Vector2D& Vector2D::operator*=(double scalar)
 {
     double length = Length() * scalar;
     double angle = Angle();
-    X = length * cos(angle);
-    Y = length * sin(angle);
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
     return *this;
 }
 
-// Divide the length of the vector by a scalar (Divide by 0 on your own risk)
+Vector2D Vector2D::operator*(Vector2D vector2D)
+{
+    return Vector2D(x * vector2D.x, y * vector2D.y);
+}
+
 Vector2D Vector2D::operator/(double scalar)
 {
     double length = Length() / scalar;
     double angle = Angle();
-    return Vector2D(length * cos(angle), length * sin(angle));
+    return Vector2D(length * std::cos(angle), length * std::sin(angle));
 }
 
-// Divide the length of the vector by a scalar (Divide by 0 on your own risk)
 Vector2D& Vector2D::operator/=(double scalar)
 {
     double length = Length() / scalar;
     double angle = Angle();
-    X = length * cos(angle);
-    Y = length * sin(angle);
+    x = length * std::cos(angle);
+    y = length * std::sin(angle);
     return *this;
 }
 
-bool Vector2D::operator==(Vector2D &vector2D)
+bool Vector2D::operator==(Vector2D vector2D)
 {
-    return X == vector2D.X && Y == vector2D.Y;
+    return x == vector2D.x && y == vector2D.y;
 }
 
-bool Vector2D::operator!=(Vector2D &vector2D)
+bool Vector2D::operator!=(Vector2D vector2D)
 {
-    return X != vector2D.X || Y != vector2D.Y;
+    return x != vector2D.x || y != vector2D.y;
 }
 
-// Compares the length of the vectors
-bool Vector2D::operator<(Vector2D &vector2D)
+bool Vector2D::operator<(Vector2D vector2D)
 {
     return Length() < vector2D.Length();
 }
 
-// Compares the length of the vectors
-bool Vector2D::operator>(Vector2D &vector2D)
+bool Vector2D::operator>(Vector2D vector2D)
 {
     return Length() > vector2D.Length();
 }
@@ -292,8 +302,6 @@ bool Vector2D::Equals(const Vector2D &vector2D)
     return this == &vector2D;
 }
 
-// Return the sum of a vector of Vector2D:S with float error corrections.
-// See: https://en.wikipedia.org/wiki/Kahan_summation_algorithm#Further_enhancements
 Vector2D Vector2D::Sum(std::vector<Vector2D> vectors)
 {
     Vector2D sum = vectors[0];
@@ -303,15 +311,15 @@ Vector2D Vector2D::Sum(std::vector<Vector2D> vectors)
     {
         Vector2D t = sum + vectors[i];
 
-        if(std::abs(sum.X) >= std::abs(vectors[i].X))
-            c.X += (sum.X - t.X) + vectors[i].X;
+        if(std::abs(sum.x) >= std::abs(vectors[i].x))
+            c.x += (sum.x - t.x) + vectors[i].x;
         else
-            c.X += (vectors[i].X - t.X) + sum.X;
+            c.x += (vectors[i].x - t.x) + sum.x;
 
-        if(std::abs(sum.Y) >= std::abs(vectors[i].Y))
-            c.Y += (sum.Y - t.Y) + vectors[i].Y;
+        if(std::abs(sum.y) >= std::abs(vectors[i].y))
+            c.y += (sum.y - t.y) + vectors[i].y;
         else
-            c.Y += (vectors[i].Y - t.Y) + sum.Y;
+            c.y += (vectors[i].y - t.y) + sum.y;
     }
 
     return sum + c;
