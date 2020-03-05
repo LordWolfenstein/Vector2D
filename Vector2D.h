@@ -24,6 +24,7 @@ private:
 protected:
     //const double PI = 3.14159265358979323846;
 public:
+    // 3.14159265358979323846
     static const double PI;
     double x;
     double y;
@@ -44,13 +45,13 @@ public:
     Vector2D(const SDL_Point &point);
 
     // Sets the vector to the values
-    void Set(double x, double y);
+    //void Set(double x, double y);
 
     // Returns the length of the vector
     double Length(void);
 
     // Sets the length and preserves angle
-    void SetLength(double length);
+    Vector2D SetLength(double length);
 
     // Returns the length difference between the vectors
     double Length(Vector2D vector2D);
@@ -68,7 +69,7 @@ public:
     Vector2D Unit(void);
 
     // Normalizes the vector to its unit vector
-    void Normalize(void);
+    Vector2D Normalize(void);
 
     // Returns angle in radians (-PI to PI)
     double Angle(void);
@@ -80,10 +81,10 @@ public:
     double Angle(Vector2D vector2D);
 
     // Rotates with the angle preserving the magnitude
-    void Rotate(double angle);
+    Vector2D Rotate(double angle);
 
     // Sets the given angle preserving the magnitude
-    void Angle(double angle);
+    Vector2D Angle(double angle);
 
     // A.K.A. Scalar product
     double Dot(Vector2D vector2D);
@@ -106,9 +107,9 @@ public:
     Vector2D operator-(Vector2D vector2D);
     // Subtracts one vector from the other
     Vector2D& operator-=(Vector2D vector2D);
-    // Substrates a scalar value from a vector
+    // Substrates a scalar value from the length a vector
     Vector2D operator-(double scalar);
-    // Substrates a scalar value from a vector
+    // Substrates a scalar value from the lengtha vector
     Vector2D& operator-=(double scalar);
     // returns the negative vector
     Vector2D operator-(void);
@@ -118,6 +119,8 @@ public:
     Vector2D& operator*=(double scalar);
     // This one makes no sense mathematically but is usefull in game programming.
     Vector2D operator*(Vector2D vector2D);
+    // This one makes no sense mathematically but is usefull in game programming.
+    Vector2D& operator*=(Vector2D vector2D);
     // Divide the length of the vector by a scalar (Divide by 0 on your own risk)
     Vector2D operator/(double scalar);
     // Divide the length of the vector by a scalar (Divide by 0 on your own risk)
@@ -135,6 +138,8 @@ public:
     // Return the sum of a vector of Vector2D:S with float error corrections.
     // See: https://en.wikipedia.org/wiki/Kahan_summation_algorithm#Further_enhancements
     static Vector2D Sum(std::vector<Vector2D> vectors);
+    //truncated the decimals of vector
+    Vector2D ToInt(void);
 
     // This does nothing
     virtual ~Vector2D(void);
