@@ -12,7 +12,7 @@ Copyright (C) 2018 Lord Wolfenstein
 
 std::ostream& operator<<(std::ostream& os, Vector2D vector2D)
 {
-    os << "X = " << vector2D.x << ", Y = " << vector2D.y << ", length = " << vector2D.Length();
+    os << "x = " << vector2D.x << ", y = " << vector2D.y << ", length = " << vector2D.Length();
     return os;
 }
 
@@ -72,22 +72,23 @@ Vector2D::~Vector2D(void)
 
 }
 
-void Vector2D::Set(double x, double y)
-{
-    this->x = x;
-    this->y = y;
-}
+//void Vector2D::Set(double x, double y)
+//{
+//    this->x = x;
+//    this->y = y;
+//}
 
 double Vector2D::Length(void)
 {
     return std::sqrt(x*x + y*y);
 }
 
-void Vector2D::SetLength(double length)
+Vector2D Vector2D::SetLength(double length)
 {
     double angle = Angle();
-    x = length * std::cos(angle);
-    y = length * std::sin(angle);
+    double x = length * std::cos(angle);
+    double y = length * std::sin(angle);
+    return Vector2D(x, y);
 }
 
 double Vector2D::Length(Vector2D vector2D)
@@ -119,14 +120,15 @@ Vector2D Vector2D::Unit(void)
     return length != 0 ? Vector2D(x / length, y / length) : Vector2D(0, 0); // if Length()==0 then return a zero vector
 }
 
-void Vector2D::Normalize(void)
+Vector2D Vector2D::Normalize(void)
 {
     double length = Length();
-    if (length != 0)
+    if(length != 0)
     {
-        x /= length;
-        y /= length;
+        return Vector2D(x / length, y / length);
     }
+    else
+        return Vector2D(0, 0);
 }
 
 double Vector2D::Angle(void)
@@ -144,19 +146,21 @@ double Vector2D::Angle(Vector2D vector2D)
     return std::atan2(Det(vector2D), Dot(vector2D));
 }
 
-void Vector2D::Angle(double angle)
+Vector2D Vector2D::Angle(double angle)
 {
     double length = Length();
-    x = length * std::cos(angle);
-    y = length * std::sin(angle);
+    double x = length * std::cos(angle);
+    double y = length * std::sin(angle);
+    return Vector2D(x, y);
 }
 
-void Vector2D::Rotate(double angle)
+Vector2D Vector2D::Rotate(double angle)
 {
     double length = Length();
     double oldAngle = Angle();
-    x = length * std::cos(oldAngle + angle);
-    y = length * std::sin(oldAngle + angle);
+    double x = length * std::cos(oldAngle + angle);
+    double y = length * std::sin(oldAngle + angle);
+    return Vector2D(x, y);
 }
 
 double Vector2D::Dot(Vector2D vector2D)
@@ -242,17 +246,20 @@ Vector2D Vector2D::operator-(void)
 
 Vector2D Vector2D::operator*(double scalar)
 {
-    double length = Length() * scalar;
-    double angle = Angle();
-    return Vector2D(length * std::cos(angle), length * std::sin(angle));
+    //double length = Length() * scalar;
+    //double angle = Angle();
+    //return Vector2D(length * std::cos(angle), length * std::sin(angle));
+    return Vector2D(x * scalar, y * scalar);
 }
 
 Vector2D& Vector2D::operator*=(double scalar)
 {
-    double length = Length() * scalar;
-    double angle = Angle();
-    x = length * std::cos(angle);
-    y = length * std::sin(angle);
+    //double length = Length() * scalar;
+    //double angle = Angle();
+    //x = length * std::cos(angle);
+    //y = length * std::sin(angle);
+    x *= scalar;
+    y *= scalar;
     return *this;
 }
 
@@ -261,19 +268,29 @@ Vector2D Vector2D::operator*(Vector2D vector2D)
     return Vector2D(x * vector2D.x, y * vector2D.y);
 }
 
+Vector2D& Vector2D::operator*=(Vector2D vector2D)
+{
+    x *= vector2D.x;
+    y *= vector2D.y;
+    return *this;
+}
+
 Vector2D Vector2D::operator/(double scalar)
 {
-    double length = Length() / scalar;
-    double angle = Angle();
-    return Vector2D(length * std::cos(angle), length * std::sin(angle));
+    //double length = Length() / scalar;
+    //double angle = Angle();
+    //return Vector2D(length * std::cos(angle), length * std::sin(angle));
+    return Vector2D(x / scalar, y / scalar);
 }
 
 Vector2D& Vector2D::operator/=(double scalar)
 {
-    double length = Length() / scalar;
-    double angle = Angle();
-    x = length * std::cos(angle);
-    y = length * std::sin(angle);
+    //double length = Length() / scalar;
+    //double angle = Angle();
+    //x = length * std::cos(angle);
+    //y = length * std::sin(angle);
+    x /= scalar;
+    y /= scalar;
     return *this;
 }
 
@@ -323,4 +340,9 @@ Vector2D Vector2D::Sum(std::vector<Vector2D> vectors)
     }
 
     return sum + c;
+}
+
+Vector2D Vector2D::ToInt(void)
+{
+    return Vector2D((int)x, (int)y);
 }
