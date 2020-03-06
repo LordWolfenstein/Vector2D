@@ -68,9 +68,6 @@ public:
     // Return the unit vector of the vector
     Vector2D Unit(void);
 
-    // Normalizes the vector to its unit vector
-    Vector2D Normalize(void);
-
     // Returns angle in radians (-PI to PI)
     double Angle(void);
 
