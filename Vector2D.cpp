@@ -120,17 +120,6 @@ Vector2D Vector2D::Unit(void)
     return length != 0 ? Vector2D(x / length, y / length) : Vector2D(0, 0); // if Length()==0 then return a zero vector
 }
 
-Vector2D Vector2D::Normalize(void)
-{
-    double length = Length();
-    if(length != 0)
-    {
-        return Vector2D(x / length, y / length);
-    }
-    else
-        return Vector2D(0, 0);
-}
-
 double Vector2D::Angle(void)
 {
     return std::atan2(y, x);
